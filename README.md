@@ -11,6 +11,7 @@ It enables the reproduction of all results and plots presented in the paper.
 - [📂 Repository Structure](#-repository-structure)
 - [🚀 Reproducing Results](#-reproducing-results)
 - [📈 Dataset Description](#-dataset-description)
+- [💻 Implementation Files](#-implementation-files)
 - [📄 Output Files](#-output-files)
 - [✨ Post-Processing](#-post-processing)
 - [📧 Contact](#-contact)
@@ -109,6 +110,9 @@ Inside these subfolders, binary files follow the naming scheme:
 - **`d`**: Low jitter delay (delay in $`d`\cdot 0.7$ ns after the trigger is raised by the control FPGA).
 
 ---
+
+## 💻 Implementation Files
+All target implementations are provided as RTL code in the `implementations` directory, along with a testbench that is compatible with all designs.
 
 ## 📄 Output Files
 
