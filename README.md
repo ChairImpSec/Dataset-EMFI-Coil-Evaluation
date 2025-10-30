@@ -29,6 +29,11 @@ However, we do not provide any support or guarantee for this approach.
 
 ```
 Dataset-EMFI-Coil-Evaluation/
+├── implementations/           # Target implementations source code
+|   ├── v3                     # Design files τ₁ (Unprotected AES)
+|   ├── v4                     # Design files τ₂ (AGEFA AES [3, 1, 3]-code)
+|   ├── v5                     # Design files τ₃ (AGEFA AES [16, 8, 5]-code)
+|   ├── aes-byte-serial-tb.vhd # Testbench for all designs
 ├── measurements/              # Raw measurement data
 │   ├── v3-10rep-1_1mx1_1mm/   # Target τ₁ (Unprotected AES)
 │   │   ├── Y0_X0_Z0/          # Probe position (Y=0, X=0, Z=0)
@@ -36,8 +41,7 @@ Dataset-EMFI-Coil-Evaluation/
 │   ├── v4-10rep-1_1mx1_1mm/   # Target τ₂ (AGEFA AES [3, 1, 3]-code)
 │   ├── v5-10rep-1_1mx1_1mm/   # Target τ₃ (AGEFA AES [16, 8, 5]-code)
 │   └── ...
-├── implementations/           # Target implementations source code
-├── result/                    # Generated CSV files and plots
+├── results/                   # Generated CSV files and plots
 ├── read.py                    # Main script for data processing
 ├── shell.nix                  # Nix environment configuration
 └── README.md
