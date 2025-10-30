@@ -7,7 +7,7 @@ It enables the reproduction of all results and plots presented in the paper.
 ---
 
 ## 📋 Table of Contents
-- [🛠️ Prerequisites](%EF%B8%8F-prerequisites)
+- [🛠️ Prerequisites](#%EF%B8%8F-prerequisites)
 - [📂 Repository Structure](#-repository-structure)
 - [🚀 Reproducing Results](#-reproducing-results)
 - [📈 Dataset Description](#-dataset-description)
