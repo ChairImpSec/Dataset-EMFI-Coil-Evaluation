@@ -102,10 +102,19 @@ The script supports the following command-line arguments (use `python read.py --
 ```bash copy
 # Command equivalent to the original submitted version
 python read.py --clean --all partial
+```
 
+```bash copy
 # Full analysis (required to run the sripts in `results`)
 python read.py --clean --no-show-plots --all all
+```
 
+> [!NOTE]
+> When all plots are generated 4 of these plots will contain for all Coordinates only zero.
+> The reason for this is a bug in the HDL implementation of the ASIC hosting the physical and algorithmic countermeasures:
+> The four HVT register with the highest index are not connected to the data bus.
+
+```bash copy
 # Use cached data with partial analysis (default)
 python read.py
 
@@ -118,6 +127,7 @@ The script processes three target implementations: `v3-10rep-1_1mx1_1mm`, `v4-10
 
 > [!NOTE]
 > The script generates more plots than depicted in the publication.
+
 
 ---
 
