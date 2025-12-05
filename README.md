@@ -142,6 +142,20 @@ python merge-coil-polarity-first-reaction.py
 > For completeness, we provide the output of all scripts within the result folder.
 ---
 
+## TODO
+From the first comments of the CHES 2026 artifact review the following TODOs are extracted.
+- [ ] Add requirement.txt to install with `pip`.
+- [ ] Fix problem with missing files:
+     ```log
+        File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
+        File not found: v4-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
+        File not found: v5-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
+        File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
+        File not found: v4-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
+        File not found: v5-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
+     ```
+- [ ] Pin versions of the dependencies (suggested for python, but we might do this for nix with flakes as well)
+
 ## 📧 Contact
 
 For questions or issues, please contact:
