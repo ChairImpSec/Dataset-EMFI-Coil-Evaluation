@@ -732,38 +732,48 @@ def compute_coordinates_effective_faults_heatmap(
             .sum()
             .reset_index()
         )
-        heatmap_data = grouped.pivot(
-            index="y-idx", columns="x-idx", values="ctx-computation-faulted"
-        ).fillna(0)
 
-        # Determine the complete range of x and y indices
-        x_idx_range = range(grouped["x-idx"].min(), grouped["x-idx"].max() + 1)
-        y_idx_range = range(grouped["y-idx"].min(), grouped["y-idx"].max() + 1)
+        # Check if grouped dataframe is empty
+        if grouped.empty:
+            print(f"Warning: No data available for {id}, creating empty heatmap")
+            heatmap_data = pd.DataFrame()
+        else:
+            heatmap_data = grouped.pivot(
+                index="y-idx", columns="x-idx", values="ctx-computation-faulted"
+            ).fillna(0)
 
-        print(heatmap_data)
-        heatmap_data = heatmap_data.reindex(
-            index=y_idx_range, columns=x_idx_range, fill_value=0
-        )
-        print(heatmap_data)
+            # Determine the complete range of x and y indices, converting to int
+            x_idx_range = range(int(grouped["x-idx"].min()), int(grouped["x-idx"].max()) + 1)
+            y_idx_range = range(int(grouped["y-idx"].min()), int(grouped["y-idx"].max()) + 1)
 
-        wide_df = heatmap_data.reset_index().melt(
-            id_vars="y-idx", var_name="x-idx", value_name="value"
-        )
-        wide_df = wide_df[["x-idx", "y-idx", "value"]]
-        wide_df = wide_df.sort_values(by=["y-idx", "x-idx"])
-        wide_df.to_csv(csv_filename, index=False)
-        heatmap_data.to_parquet(parquet_filename)
-        print(f"Exported data for {id} to {csv_filename} and {parquet_filename}")
+            print(heatmap_data)
+            heatmap_data = heatmap_data.reindex(
+                index=y_idx_range, columns=x_idx_range, fill_value=0
+            )
+            print(heatmap_data)
+
+            wide_df = heatmap_data.reset_index().melt(
+                id_vars="y-idx", var_name="x-idx", value_name="value"
+            )
+            wide_df = wide_df[["x-idx", "y-idx", "value"]]
+            wide_df = wide_df.sort_values(by=["y-idx", "x-idx"])
+            wide_df.to_csv(csv_filename, index=False)
+            heatmap_data.to_parquet(parquet_filename)
+            print(f"Exported data for {id} to {csv_filename} and {parquet_filename}")
     else:
         heatmap_data = pd.read_parquet(parquet_filename, engine="pyarrow")
 
-    plt.figure(figsize=(10, 10))
-    sns.heatmap(heatmap_data, annot=True, fmt="g", cmap="viridis")
-    plt.title("Heatmap of Effective Faults in the Ciphertext " + id)
-    plt.xlabel("X Coordinate")
-    plt.ylabel("Y Coordinate")
-    if SHOW_PLOTS:
-        plt.show()
+    # Only plot if we have data
+    if not heatmap_data.empty:
+        plt.figure(figsize=(10, 10))
+        sns.heatmap(heatmap_data, annot=True, fmt="g", cmap="viridis")
+        plt.title("Heatmap of Effective Faults in the Ciphertext " + id)
+        plt.xlabel("X Coordinate")
+        plt.ylabel("Y Coordinate")
+        if SHOW_PLOTS:
+            plt.show()
+    else:
+        print(f"Skipping plot for {id} due to empty data")
 
 
 def compute_coordinates_timeout_heatmap(
@@ -896,21 +906,29 @@ def compute_voltage_low_jitter_delay_effective_faults_heatmap(
             .sum()
             .reset_index()
         )
-        heatmap_data = grouped.pivot(
-            index="v-level",
-            columns="low-jitter-delay",
-            values="ctx-computation-faulted",
-        ).fillna(0)
 
-        x_idx_range = [15, 20, 25, 30, 35]
-        y_idx_range = range(50, 510, 10)
-        heatmap_data.columns = heatmap_data.columns.astype(int)
+        # Check if grouped dataframe is empty
+        if grouped.empty:
+            print(f"Warning: No data available for {id}, creating empty heatmap")
+            x_idx_range = [15, 20, 25, 30, 35]
+            y_idx_range = range(50, 510, 10)
+            heatmap_data = pd.DataFrame(0, index=y_idx_range, columns=x_idx_range)
+        else:
+            heatmap_data = grouped.pivot(
+                index="v-level",
+                columns="low-jitter-delay",
+                values="ctx-computation-faulted",
+            ).fillna(0)
 
-        print(heatmap_data)
-        heatmap_data = heatmap_data.reindex(
-            index=y_idx_range, columns=x_idx_range, fill_value=0
-        )
-        print(heatmap_data)
+            x_idx_range = [15, 20, 25, 30, 35]
+            y_idx_range = range(50, 510, 10)
+            heatmap_data.columns = heatmap_data.columns.astype(int)
+
+            print(heatmap_data)
+            heatmap_data = heatmap_data.reindex(
+                index=y_idx_range, columns=x_idx_range, fill_value=0
+            )
+            print(heatmap_data)
 
         wide_df = heatmap_data.reset_index().melt(
             id_vars="v-level", var_name="low-jitter-delay", value_name="value"
@@ -1652,7 +1670,7 @@ def analysis(
     #                                              id="no-detection",
     #                                              clean=clean)
 
-    if no_detection_no_timeout_but_effective_faults_df is not None:
+    if no_detection_no_timeout_but_effective_faults_df is not None and not no_detection_no_timeout_but_effective_faults_df.empty:
         compute_coordinates_effective_faults_heatmap(
             no_detection_no_timeout_but_effective_faults_df,
             results_dir + "/" + experiment_directory,
@@ -1660,8 +1678,8 @@ def analysis(
             clean=clean,
         )
     else:
-        print("Data not available")
-        return -1
+        print("Warning: No data available for no-timeout-no-detection analysis")
+        # Don't return -1, just continue with other analyses
 
     compute_voltage_low_jitter_delay_effective_faults_heatmap(
         no_timeouts_df,
@@ -1703,13 +1721,8 @@ results_dir = "results"
 ###############################################################################
 
 
-def main():
+def main(clean=False, all="partial"):
     """Main function that serves as the entry point of the program."""
-
-    clean = True
-    all = "all"
-    # all = "parial"
-    # all = "minimal"
 
     for exp in ["v3-10rep-1_1mx1_1mm", "v4-10rep-1_1mx1_1mm", "v5-10rep-1_1mx1_1mm"]:
 
@@ -1752,9 +1765,20 @@ if __name__ == "__main__":
         action="store_true",
         help="Disable showing plots (default: plots are shown)",
     )
+    parser.add_argument(
+        "--all",
+        choices=["all", "partial", "minimal"],
+        default="partial",
+        help="Level of analysis to perform (default: partial)",
+    )
+    parser.add_argument(
+        "--clean",
+        action="store_true",
+        help="Regenerate all files instead of using cache (default: use cache)",
+    )
     args = parser.parse_args()
 
     # Set global SHOW_PLOTS based on command line argument
     SHOW_PLOTS = not args.no_show_plots
 
-    main()
+    main(clean=args.clean, all=args.all)
