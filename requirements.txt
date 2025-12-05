@@ -1,0 +1,8 @@
+# Python dependencies for EMFI Coil Evaluation Dataset
+# Install with: pip install -r requirements.txt
+
+numpy==2.3.4
+pandas==2.3.1
+matplotlib==3.10.5
+seaborn==0.13.2
+pyarrow==20.0.0

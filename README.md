@@ -20,9 +20,9 @@ It enables the reproduction of all results and plots presented in the paper.
 
 ## 🛠️ Prerequisites
 
-To reproduce the results, ensure that the [**Nix package manager**](https://nixos.org/download/) (for environment setup) is installed.
-If you do not want to use Nix, you can install all dependencies listed in `shell.nix` using your preferred method.
-However, we do not provide any support or guarantee for this approach.
+To reproduce the results, you can use either:
+- **[Nix package manager](https://nixos.org/download/)** (recommended for reproducibility)
+- **Python 3 with pip** (see `requirements.txt` for dependencies)
 
 ---
 
@@ -59,9 +59,25 @@ cd Dataset-EMFI-Coil-Evaluation
 ```
 
 ### 2. Set Up the Environment
-Use the provided `shell.nix` to install all dependencies:
+
+**Option A: Using Nix Flakes (recommended - provides pinned dependencies):**
+```bash copy
+nix develop
+```
+
+For setups without experimental features enabled:
+```bash copy
+nix --extra-experimental-features 'nix-command flakes' develop
+```
+
+**Option B: Using traditional Nix:**
 ```bash copy
 nix-shell
+```
+
+**Option C: Using pip (without Nix):**
+```bash copy
+pip install -r requirements.txt
 ```
 
 ### 3. Run the Analysis Script
@@ -186,7 +202,7 @@ python merge-coil-polarity-first-reaction.py
 
 ## TODO
 From the first comments of the CHES 2026 artifact review the following TODOs are extracted.
-- [ ] Add requirements.txt to install with `pip`.
+- [x] Add requirements.txt to install with `pip`.
 - [x] Fix problem with missing files:
      ```log
         File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
