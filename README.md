@@ -71,14 +71,50 @@ python read.py
 ```
 This script processes the raw measurement data and generates CSV files for all plots in the paper.
 
-### Flags in `read.py`
-- **`clean` (line 1481):**
-  Set `clean=False` to use cached data (included in this repository) instead of recomputing all steps.
+### Command-Line Options
+The script supports the following command-line arguments (use `python read.py --help` to see all options):
 
-- **`all` (line 1482):**
-  Set `all=True` to compute all available plots.
-- **['v3-10rep-1_1mx1_1mm', 'v4-10rep-1_1mx1_1mm','v5-10rep-1_1mx1_1mm'] (line 1492 to 1494)**:
-  Experiments that are evaluated.
+- **`--clean`:**
+  Regenerate all files from raw measurement data instead of using cached preprocessed data.
+
+  ```bash copy
+  python read.py --clean
+  ```
+
+- **`--all {all,partial,minimal}`:**
+  Set the level of analysis to perform (default: `partial`).
+  - `all`: Generate all available heatmaps and plots
+  - `partial`: Generate only pinout-based detection heatmaps
+  - `minimal`: Generate minimal set of plots
+
+  ```bash copy
+  python read.py --all all
+  ```
+
+- **`--no-show-plots`:**
+  Disable interactive plot display (useful for batch processing).
+
+  ```bash copy
+  python read.py --no-show-plots
+  ```
+
+**Example usage:**
+```bash copy
+# Command equivalent to the original submitted version
+python read.py --clean --all partial
+
+# Full analysis (required to run the sripts in `results`)
+python read.py --clean --no-show-plots --all all
+
+# Use cached data with partial analysis (default)
+python read.py
+
+# Regenerate without showing plots
+python read.py --clean --no-show-plots
+```
+
+**Experiments evaluated:**
+The script processes three target implementations: `v3-10rep-1_1mx1_1mm`, `v4-10rep-1_1mx1_1mm`, and `v5-10rep-1_1mx1_1mm`.
 
 > [!NOTE]
 > The script generates more plots than depicted in the publication.
@@ -129,7 +165,6 @@ These files are saved in the `result` directory, mirroring the structure of the 
 For certain plots (e.g., **Plot 7a** and **Plot 7b**), additional post-processing is required.
 The scripts for this are located in the `result` folder.
 Run them after generating the initial CSV files:
-<!-- TODO:  In which order to execute? -->
 
 ```bash copy
 cd result
