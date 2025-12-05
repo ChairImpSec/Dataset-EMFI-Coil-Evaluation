@@ -65,11 +65,11 @@ nix-shell
 ```
 
 ### 3. Run the Analysis Script
-Execute the following command to generate CSV files and plots:
+Execute the following command to process cached data and generate CSV files:
 ```bash copy
 python read.py
 ```
-This script processes the raw measurement data and generates CSV files for all plots in the paper.
+By default, this uses cached preprocessed data (included in the repository) and generates only pinout-based detection heatmaps. For full analysis from raw data, see the command-line options below.
 
 ### Command-Line Options
 The script supports the following command-line arguments (use `python read.py --help` to see all options):
@@ -100,27 +100,23 @@ The script supports the following command-line arguments (use `python read.py --
 
 **Example usage:**
 ```bash copy
+# Quick start - use cached data with partial analysis (default)
+python read.py
+
 # Command equivalent to the original submitted version
 python read.py --clean --all partial
-```
 
-```bash copy
-# Full analysis (required to run the sripts in `results`)
+# Full analysis - required to run the scripts in `results` (takes ~30 minutes)
 python read.py --clean --no-show-plots --all all
+
+# Regenerate with partial analysis without showing plots
+python read.py --clean --no-show-plots
 ```
 
 > [!NOTE]
-> When all plots are generated 4 of these plots will contain for all Coordinates only zero.
+> When all plots are generated, 4 of these plots will contain only zeros for all coordinates.
 > The reason for this is a bug in the HDL implementation of the ASIC hosting the physical and algorithmic countermeasures:
-> The four HVT register with the highest index are not connected to the data bus.
-
-```bash copy
-# Use cached data with partial analysis (default)
-python read.py
-
-# Regenerate without showing plots
-python read.py --clean --no-show-plots
-```
+> The four HVT registers with the highest index are not connected to the data bus correctly.
 
 **Experiments evaluated:**
 The script processes three target implementations: `v3-10rep-1_1mx1_1mm`, `v4-10rep-1_1mx1_1mm`, and `v5-10rep-1_1mx1_1mm`.
@@ -134,7 +130,7 @@ The script processes three target implementations: `v3-10rep-1_1mx1_1mm`, `v4-10
 ## 📈 Dataset Description
 
 ### Measurement Folders
-The `measurement` directory contains subfolders for each target, as described below:
+The `measurements` directory contains subfolders for each target, as described below:
 
 | Folder                | Target Description                     |
 |-----------------------|----------------------------------------|
@@ -163,7 +159,7 @@ All target implementations are provided as RTL code in the `implementations` dir
 ## 📄 Output Files
 
 The `read.py` script generates CSV files for each plot in the paper.
-These files are saved in the `result` directory, mirroring the structure of the `measurement` folder.
+These files are saved in the `results` directory, mirroring the structure of the `measurements` folder.
 
 > [!NOTE]
 > Some plots (e.g., the first four line plots per target) are not directly used in the publication, but post-processed.
@@ -173,11 +169,11 @@ These files are saved in the `result` directory, mirroring the structure of the 
 ## ✨ Post-Processing
 
 For certain plots (e.g., **Plot 7a** and **Plot 7b**), additional post-processing is required.
-The scripts for this are located in the `result` folder.
-Run them after generating the initial CSV files:
+The scripts for this are located in the `results` folder.
+Run them **after** generating the initial CSV files with `--all all`:
 
 ```bash copy
-cd result
+cd results
 python merge-coil-polarity-results.py
 python merge-coil-results.py
 python merge-coil-types-for-polarity.py
@@ -185,12 +181,12 @@ python merge-coil-polarity-first-reaction.py
 ```
 
 > [!NOTE]
-> For completeness, we provide the output of all scripts within the result folder.
+> For completeness, we provide the output of all scripts within the results folder.
 ---
 
 ## TODO
 From the first comments of the CHES 2026 artifact review the following TODOs are extracted.
-- [ ] Add requirement.txt to install with `pip`.
+- [ ] Add requirements.txt to install with `pip`.
 - [x] Fix problem with missing files:
      ```log
         File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
