@@ -254,21 +254,63 @@ python ../merge-coil-polarity-first-reaction.py
 
 > [!NOTE]
 > For completeness, we provide the output of all scripts within the results folder.
+
 ---
 
-## TODO
-From the first comments of the CHES 2026 artifact review the following TODOs are extracted.
-- [x] Add requirements.txt to install with `pip`.
-- [x] Fix problem with missing files:
-     ```log
-        File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
-        File not found: v4-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
-        File not found: v5-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-lvt-c8-id-all.csv
-        File not found: v3-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
-        File not found: v4-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
-        File not found: v5-10rep-1_1mx1_1mm/detection-heatmap-coilcoils-hvt-c1-id-all.csv
-     ```
-- [x] Pin versions of the dependencies (suggested for python, but we might do this for nix with flakes as well)
+## 📊 Generating Paper Figures
+
+### Figure 7a (Voltage vs Polarity Counts)
+
+Figure 7a data is generated automatically by the function `plot_coil_counts_by_vlevel_and_polarity(df, export_dir, id="")`.
+
+**Generation pipeline:**
+
+1. Generate initial data:
+   ```bash
+   python read.py --all partial
+   ```
+   This opens plots for each target and all three cell types.
+
+2. Merge the data:
+   - `merge-coil-polarity-results.py` merges the polarity results
+   - `merge-coil-types-for-polarity.py` further merges across cell types
+
+3. Final visualization:
+   The resulting CSV is processed by a TikZ script that computes ratios by dividing the detection counts by the number of experiments conducted for each voltage level and polarity.
+
+### Figure 7b (Polarity Comparison)
+
+Figure 7b requires manual post-processing after running `merge-coil-polarity-first-reaction.py`.
+
+The function `plot_polarity_start_comparison(df, export_dir, id="")` generates 3 versions of Figure 7b (one per target).
+The final Figure 7b in the paper is the average of these 3 plots, with coil 9 manually adjusted.
+
+The file `results/polarity-comparison-results-merged.csv` contains the merged results.
+After post-processing the result is as follows:
+   ```csv
+   coil,value
+   coils-lvt-c0,0
+   coils-lvt-c1,0
+   coils-lvt-c2,3
+   coils-lvt-c3,0
+   coils-lvt-c4,3
+   coils-lvt-c5,3
+   coils-lvt-c6,3
+   coils-lvt-c7,0
+   coils-lvt-c8,3
+   coils-lvt-c9,1.5
+   coils-lvt-c10,3
+   ```
+- **Value interpretation:**
+   - `3` = "+" (positive polarity starts earlier)
+   - `0` = "-" (negative polarity starts earlier)
+   - `1.5` = neutral (no clear preference)
+
+- **Special handling of coil 9:**
+    The ninth coil is set to neutral (1.5) because we observed that the coil itself does not detect the EM field, but rather the wires connecting it.
+    Therefore, the relationship between the winding direction and field polarity cannot be analyzed for this coil.
+
+---
 
 ## 📧 Contact
 
