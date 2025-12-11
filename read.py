@@ -1589,9 +1589,6 @@ def analysis(
         df, results_dir + "/" + experiment_directory, id="all"
     )
 
-    # TODO: we have removed a this here to speed it up.
-    # We probably need to renable this. To fix the problem of the reviewer.
-
     if all == "all":
         # Define the columns of interest
         coil_columns = [
@@ -1631,6 +1628,19 @@ def analysis(
                                     results_dir + '/' + experiment_directory,
                                     id="lvt-hvt-c0-difference")
 
+        # Generate pinout-based heatmaps for all == "all"
+        pinout_columns = [f"coils-pinout-c{X}" for X in range(11)]
+        for col in pinout_columns:
+            for t in ["lvt", "std", "hvt"]:
+                compute_coordinates_detection_heatmap_pinout_based(
+                    df,
+                    t,
+                    col,
+                    results_dir + "/" + experiment_directory,
+                    id="all",
+                    clean=clean,
+                    show=False,
+                )
 
     else:
         coil_columns = []

@@ -1,4 +1,5 @@
 # Python dependencies for EMFI Coil Evaluation Dataset
+# Tested with Python 3.13.9
 # Install with: pip install -r requirements.txt
 
 numpy==2.3.4

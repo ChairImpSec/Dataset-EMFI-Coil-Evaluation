@@ -20,9 +20,11 @@ It enables the reproduction of all results and plots presented in the paper.
 
 ## 🛠️ Prerequisites
 
-To reproduce the results, you can use either:
-- **[Nix package manager](https://nixos.org/download/)** (recommended for reproducibility)
-- **Python 3 with pip** (see `requirements.txt` for dependencies)
+To reproduce the results, you need:
+1. **[Git LFS](https://git-lfs.github.com/)** - Required for cloning large data files
+2. **Environment setup** (choose one):
+   - **[Nix package manager](https://nixos.org/download/)** (recommended for reproducibility)
+   - **Python 3.13+** with pip (tested with Python 3.13.9, see `requirements.txt`)
 
 ---
 
@@ -52,13 +54,29 @@ Dataset-EMFI-Coil-Evaluation/
 
 ## 🚀 Reproducing Results
 
-### 1. Clone the Repository
+### 1. Install Git LFS (if not already installed)
+```bash copy
+# On Ubuntu/Debian
+sudo apt-get install git-lfs
+
+# On macOS
+brew install git-lfs
+
+# On other systems, see: https://git-lfs.github.com/
+```
+
+Initialize Git LFS:
+```bash copy
+git lfs install
+```
+
+### 2. Clone the Repository
 ```bash copy
 git clone https://github.com/ChairImpSec/Dataset-EMFI-Coil-Evaluation
 cd Dataset-EMFI-Coil-Evaluation
 ```
 
-### 2. Set Up the Environment
+### 3. Set Up the Environment
 
 **Option A: Using Nix Flakes (recommended - provides pinned dependencies):**
 ```bash copy
@@ -80,7 +98,7 @@ nix-shell
 pip install -r requirements.txt
 ```
 
-### 3. Run the Analysis Script
+### 4. Run the Analysis Script
 Execute the following command to process cached data and generate CSV files:
 ```bash copy
 python read.py
@@ -182,18 +200,56 @@ These files are saved in the `results` directory, mirroring the structure of the
 
 ---
 
-## ✨ Post-Processing
+## ✨ Reproduction Workflow
 
-For certain plots (e.g., **Plot 7a** and **Plot 7b**), additional post-processing is required.
-The scripts for this are located in the `results` folder.
-Run them **after** generating the initial CSV files with `--all all`:
+### Quick Start (Using Cached Data)
+
+The repository includes preprocessed data for fast reproduction:
 
 ```bash copy
+make              # Run post-processing with cached data (~1 minute)
+```
+
+### Complete Reproduction (From Raw Data)
+
+To regenerate everything from scratch:
+
+```bash copy
+make clean all    # Clean and regenerate everything (~30 minutes)
+```
+
+### Step-by-Step Workflow
+
+```bash copy
+make clean            # Remove all generated files
+make analysis-clean   # Generate CSV files from raw measurements (~30 min)
+make post-process     # Run post-processing scripts for merged plots
+```
+
+### Available Make Targets
+
+- `make` - Quick run using cached data (default)
+- `make clean all` - Full regeneration from scratch
+- `make analysis` - Generate results using cached preprocessed data
+- `make analysis-clean` - Regenerate from raw measurement files
+- `make post-process` - Run post-processing scripts only
+- `make clean` - Remove all generated files
+- `make help` - Show available targets
+
+### Manual Execution (Without Make)
+
+If you prefer to run scripts manually:
+
+```bash copy
+# Step 1: Generate initial CSV files
+python read.py --clean --no-show-plots --all all
+
+# Step 2: Run post-processing scripts
 cd results
-python merge-coil-polarity-results.py
-python merge-coil-results.py
-python merge-coil-types-for-polarity.py
-python merge-coil-polarity-first-reaction.py
+python ../merge-coil-polarity-results.py
+python ../merge-coil-results.py
+python ../merge-coil-types-for-polarity.py
+python ../merge-coil-polarity-first-reaction.py
 ```
 
 > [!NOTE]
