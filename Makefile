@@ -1,13 +1,16 @@
-.PHONY: all clean analysis analysis-clean post-process help
+.PHONY: all clean analysis analysis-clean post-process help full-rebuild
 
 # Default target - uses cached data if available
-all: post-process
+all: analysis post-process
+
+# Full rebuild from scratch
+full-rebuild: clean analysis-clean post-process
 
 # Help target
 help:
 	@echo "Available targets:"
-	@echo "  make              - Run post-processing using cached data (fast)"
-	@echo "  make clean all    - Clean and regenerate everything from scratch (~30 min)"
+	@echo "  make              - Run analysis and post-processing (uses cache, ~1 min)"
+	@echo "  make full-rebuild - Clean and regenerate everything from scratch (~30 min)"
 	@echo "  make analysis     - Generate results using cached preprocessed data"
 	@echo "  make analysis-clean - Regenerate results from raw measurement files"
 	@echo "  make post-process - Run all post-processing scripts"

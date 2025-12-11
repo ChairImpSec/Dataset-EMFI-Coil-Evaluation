@@ -215,7 +215,7 @@ make              # Run post-processing with cached data (~1 minute)
 To regenerate everything from scratch:
 
 ```bash copy
-make clean all    # Clean and regenerate everything (~30 minutes)
+make full-rebuild    # Clean and regenerate everything (~30 minutes)
 ```
 
 ### Step-by-Step Workflow
@@ -229,7 +229,7 @@ make post-process     # Run post-processing scripts for merged plots
 ### Available Make Targets
 
 - `make` - Quick run using cached data (default)
-- `make clean all` - Full regeneration from scratch
+- `make full-rebuild` - Full regeneration from scratch
 - `make analysis` - Generate results using cached preprocessed data
 - `make analysis-clean` - Regenerate from raw measurement files
 - `make post-process` - Run post-processing scripts only
@@ -258,6 +258,9 @@ python ../merge-coil-polarity-first-reaction.py
 ---
 
 ## 📊 Generating Paper Figures
+
+Currently, no python script is available to generate exactly the same plot as shown in Figure 7a and Figure 7b,
+due to manually post-processing and computations from within TikZ.
 
 ### Figure 7a (Voltage vs Polarity Counts)
 
