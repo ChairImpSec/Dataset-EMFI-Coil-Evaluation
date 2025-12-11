@@ -1193,7 +1193,7 @@ def compute_coil_counts_by_vlevel_plot(df):
 
 def plot_coil_counts_by_vlevel_and_polarity(df, export_dir, id=""):
     """
-    Plots the count of ones in each of the coils-lvt-cX columns for each v-level and polarity.
+    Plots the count of ones in each of the coils-{TYPE}-cX columns for each v-level and polarity.
     Parameters:
     df (pd.DataFrame): The input DataFrame containing the columns of interest.
     export_dir (str): Directory to export CSV files.
