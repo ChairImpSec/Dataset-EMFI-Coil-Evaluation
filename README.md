@@ -76,6 +76,12 @@ git clone https://github.com/ChairImpSec/Dataset-EMFI-Coil-Evaluation
 cd Dataset-EMFI-Coil-Evaluation
 ```
 
+> [!IMPORTANT]
+> Due to Git LFS budget limitations, it is currently not possible to clone the preprocessed cached files (`.parquet` files in `results/`).
+> The corresponding error can be ignored.
+> However, **you must regenerate all temporary files** using the `make full-rebuild` command (see section 4 below).
+> This will process the raw measurement data (~30 minutes) to generate all analysis results.
+
 ### 3. Set Up the Environment
 
 **Option A: Using Nix Flakes (recommended - provides pinned dependencies):**
